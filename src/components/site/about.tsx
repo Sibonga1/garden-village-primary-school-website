@@ -1,3 +1,21 @@
+/**
+ * about.tsx  ──  <About id="about">
+ * ------------------------------------------------------------------
+ * School story: heading + 4 paragraphs (serif) + closing emphasis line
+ * that reveals word-by-word as you scroll. Right column shows the animated
+ * Crest with rotating dashed halos + floating "EST. 2007" / "Rooted in
+ * Community" chips, and three motto pills (Education is Power / Knowledge
+ * is Growth / The Future Starts Here).
+ *
+ * Animations:
+ *  • GSAP ScrollTrigger — scrubbed word-by-word opacity reveal on the
+ *    closing line (".gv-about-closing-word").
+ *  • Motion — Reveal wrappers for paragraphs + rotating halos + floating chips.
+ *
+ * Connects to: mottos hint at #programs; flows into Stats below.
+ * Data: aboutParagraphs, aboutClosing, aboutMottos (lib/site-data.ts) ·
+ *        Crest (crest.tsx).
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -8,6 +26,8 @@ import { Leaf, Sprout, Heart } from "lucide-react";
 import { Crest } from "./crest";
 import { aboutParagraphs, aboutClosing, aboutMottos } from "@/lib/site-data";
 import { Reveal } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -44,6 +64,7 @@ export function About() {
 
   return (
     <section id="about" ref={root} className="relative gv-bg-mint py-20 sm:py-28">
+      <DevBadge meta={devMeta("about")} />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--gv-leaf)]/30 to-transparent" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-10">

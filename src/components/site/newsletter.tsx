@@ -1,3 +1,19 @@
+/**
+ * newsletter.tsx  ──  <Newsletter id="contact">
+ * ------------------------------------------------------------------
+ * Newsletter signup + contact info. Two columns:
+ *  LEFT  — "Plant a seed in your inbox" form (name + email → Subscribe).
+ *  RIGHT — 4 contact tiles (Visit/Call/Email/Hours) + stylized map.
+ *
+ * NOTE: id="contact" so Enrol Now / Donate / Contact all land here.
+ *
+ * Animations:
+ *  • Motion — Reveal; hover lift on contact tiles; animated SVG map pulse.
+ *  • Submit → useToast (hooks/use-toast.ts) fires a success toast.
+ *
+ * Connects to: anchor target of Navbar Enrol Now, Donate, More Links Contact.
+ * Data: contactInfo (lib/site-data.ts) · campus.png bg.
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { useState } from "react";
@@ -6,6 +22,8 @@ import { Mail, MapPin, Phone, Clock, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { contactInfo } from "@/lib/site-data";
 import { Reveal } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
@@ -41,6 +59,7 @@ export function Newsletter() {
 
   return (
     <section id="contact" className="relative overflow-hidden bg-[var(--gv-forest)] py-20 sm:py-28">
+      <DevBadge meta={devMeta("contact")} />
       {/* campus image as faint bg */}
       <div className="pointer-events-none absolute inset-0 opacity-20">
         <img

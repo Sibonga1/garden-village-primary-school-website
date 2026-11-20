@@ -1,3 +1,17 @@
+/**
+ * programs.tsx  ──  <Programs id="programs">
+ * ------------------------------------------------------------------
+ * 6 interactive program cards (Academics, Sports, Arts, Green Gardeners,
+ * Code & Robotics, Aftercare). Each card tilts in 3D toward the cursor.
+ *
+ * Animations:
+ *  • TiltCard — mouse-tracked rotateX/rotateY via Motion springs; accent
+ *    glow follows hover.
+ *  • Motion — RevealGroup stagger on entrance.
+ *
+ * Connects to: anchor target of About's motto pills.
+ * Data: programs array + iconMap (lib/site-data.ts · lucide-react).
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { useRef } from "react";
@@ -20,6 +34,8 @@ import {
 } from "lucide-react";
 import { programs } from "@/lib/site-data";
 import { Reveal, RevealGroup, RevealItem } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 const iconMap: Record<string, LucideIcon> = {
   BookOpen,
@@ -82,6 +98,7 @@ function TiltCard({
 export function Programs() {
   return (
     <section id="programs" className="relative gv-bg-mint-2 py-20 sm:py-28">
+      <DevBadge meta={devMeta("programs")} />
       <div className="mx-auto max-w-7xl px-5 sm:px-10">
         <Reveal direction="up" className="mb-12 max-w-2xl">
           <div className="flex items-center gap-3">

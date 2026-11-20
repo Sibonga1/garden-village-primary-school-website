@@ -1,13 +1,29 @@
+/**
+ * staff.tsx  ──  <Staff id="staff">
+ * ------------------------------------------------------------------
+ * 4 staff profile cards: photo (zoom on hover), subject tags, name/role
+ * overlay, italic quote, and Mail + LinkedIn action buttons.
+ *
+ * Animations:
+ *  • Motion — RevealGroup stagger; hover lifts card + zooms image;
+ *    social icon micro-interactions.
+ *
+ * Connects to: Mail/LinkedIn → #contact.
+ * Data: staff array (lib/site-data.ts) · staff images in /public/images.
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { motion } from "framer-motion";
 import { Mail, Linkedin, Quote } from "lucide-react";
 import { staff } from "@/lib/site-data";
 import { Reveal, RevealGroup, RevealItem } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 export function Staff() {
   return (
     <section id="staff" className="relative gv-bg-mint py-20 sm:py-28">
+      <DevBadge meta={devMeta("staff")} />
       <div className="mx-auto max-w-7xl px-5 sm:px-10">
         <Reveal direction="up" className="mb-12 max-w-2xl">
           <div className="flex items-center gap-3">

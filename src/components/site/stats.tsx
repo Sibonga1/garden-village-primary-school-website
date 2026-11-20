@@ -1,13 +1,30 @@
+/**
+ * stats.tsx  ──  <Stats id="stats">
+ * ------------------------------------------------------------------
+ * Dark-green band with 4 animated counters (Learners / Teachers / Years /
+ * Pass Rate). No inbound anchors — sits as a visual bridge between About
+ * and Programs.
+ *
+ * Animations:
+ *  • CountUp (count-up.tsx) — animates a MotionValue 0→target when the
+ *    number scrolls into view.
+ *  • Motion — RevealGroup stagger + hover lift per stat.
+ *
+ * Data: heroStats (lib/site-data.ts).
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { motion } from "framer-motion";
 import { CountUp } from "./count-up";
 import { heroStats } from "@/lib/site-data";
 import { Reveal, RevealGroup, RevealItem } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 export function Stats() {
   return (
-    <section className="relative overflow-hidden bg-[var(--gv-forest)] py-16 sm:py-20">
+    <section id="stats" className="relative overflow-hidden bg-[var(--gv-forest)] py-16 sm:py-20">
+      <DevBadge meta={devMeta("stats")} />
       {/* glow */}
       <div className="pointer-events-none absolute -left-20 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-[var(--gv-leaf)]/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-20 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-[var(--gv-lime)]/15 blur-3xl" />

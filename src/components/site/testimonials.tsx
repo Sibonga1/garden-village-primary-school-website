@@ -1,3 +1,17 @@
+/**
+ * testimonials.tsx  ──  <Testimonials id="events">
+ * ------------------------------------------------------------------
+ * Auto-rotating testimonial carousel (6s). Quote + star rating + author.
+ * NOTE: id="events" so the navbar's More Links → Events lands here.
+ *
+ * Animations:
+ *  • Motion AnimatePresence — slide + blur between slides (mode="wait").
+ *  • Auto-advance every 6s; the active progress dot fills via scaleX over
+ *    the interval.
+ *  • Prev/Next + clickable dots.
+ *
+ * Data: testimonials array (lib/site-data.ts).
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -5,6 +19,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 import { testimonials } from "@/lib/site-data";
 import { Reveal } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 const AUTO_MS = 6000;
 
@@ -32,6 +48,7 @@ export function Testimonials() {
       id="events"
       className="relative overflow-hidden bg-[var(--gv-forest)] py-20 sm:py-28"
     >
+      <DevBadge meta={devMeta("events")} />
       {/* glow */}
       <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-[var(--gv-leaf)]/15 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-[var(--gv-lime)]/10 blur-3xl" />

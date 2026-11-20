@@ -1,3 +1,19 @@
+/**
+ * fundraising.tsx  ──  <Fundraising id="fundraising">
+ * ------------------------------------------------------------------
+ * Full-width parallax fundraising banner: assembly photo bg + dark-green
+ * overlay card containing the Crest, a live donation progress bar, and
+ * Learn More / Donate buttons.
+ *
+ * Animations:
+ *  • Motion — useScroll parallax: bg image drifts, overlay card moves
+ *    opposite. Progress bar animates width on in-view.
+ *  • Reveal — title + buttons.
+ *
+ * Connects to: Learn More → #about · Donate → #contact.
+ * Data: RAISED/GOAL constants (inline), fundraising-assembly.png, Crest,
+ *        GvButton.
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { useRef } from "react";
@@ -6,6 +22,8 @@ import { HandHeart, Target } from "lucide-react";
 import { Crest } from "./crest";
 import { GvButton } from "./gv-button";
 import { Reveal } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 const RAISED = 184000;
 const GOAL = 250000;
@@ -22,6 +40,7 @@ export function Fundraising() {
 
   return (
     <section id="fundraising" ref={root} className="relative overflow-hidden">
+      <DevBadge meta={devMeta("fundraising")} />
       {/* Parallax photo background */}
       <motion.div style={{ y: bgY }} className="absolute inset-0 -top-[12%] h-[124%]">
         <img

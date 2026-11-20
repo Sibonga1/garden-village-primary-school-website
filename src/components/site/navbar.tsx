@@ -1,3 +1,21 @@
+/**
+ * navbar.tsx  ──  <Navbar>  (fixed, top, full-width)
+ * ------------------------------------------------------------------
+ * Floating glassmorphism pill navbar. Left: crest + "Garden Village /
+ * SCHOOL · SOUTH AFRICA". Center: Home / About / Staff / More Links ▾.
+ * Right: "Enrol Now" pill. Mobile: hamburger → slide-in sheet.
+ *
+ * "More Links" opens a large glassmorphism dropdown panel:
+ *   LEFT column:  Sports · Code of Conduct · Contact
+ *   RIGHT column: Careers · Fundraising · Events
+ *   + 4 social icons (Facebook/Instagram/YouTube/X).
+ *
+ * State: `scrolled` (useScroll > 30px → tighter glass) · `moreOpen`
+ * (click toggle, closes on outside-click / Escape) · `mobileOpen`.
+ *
+ * Connects to: #home, #about, #staff, #contact + the 6 More Links anchors.
+ * Data: primaryNav, moreLinksLeft, moreLinksRight (lib/site-data.ts).
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { useEffect, useRef, useState } from "react";

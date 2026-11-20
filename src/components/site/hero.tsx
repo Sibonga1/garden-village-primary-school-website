@@ -1,3 +1,24 @@
+/**
+ * hero.tsx  ──  <Hero id="home">
+ * ------------------------------------------------------------------
+ * Above-the-fold intro: dark forest-green rounded card.
+ *  • Mixed serif/sans lime headline  ("Garden Village Education is Power")
+ *  • Classroom photo (right) with "Green Classroom" badge
+ *  • Tree-canopy accent using mix-blend:screen so its black bg
+ *    disappears into the hero.
+ *  • CTAs: Learn More → #about · Enrol Today → #contact
+ *
+ * Animations:
+ *  • GSAP ScrollTrigger — word-by-word headline reveal + tree parallax
+ *    (scrubbed). Registered once on the client.
+ *  • Motion — scroll-linked transforms (headline y/opacity fade, classroom
+ *    parallax, tree y) via useScroll + useTransform on heroRef.
+ *  • FloatingParticles — Motion loops of small lime dots.
+ *
+ * Connects to: about (#about), contact (#contact).
+ * Data: inline headlineLines, hero-classroom.png, GvButton (→ gv-button.tsx).
+ * ------------------------------------------------------------------
+ */
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -7,6 +28,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { GvButton } from "./gv-button";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -98,6 +121,7 @@ export function Hero() {
       className="relative px-3 pt-24 sm:px-5 sm:pt-28"
     >
       <div className="relative overflow-hidden rounded-[28px] bg-[var(--gv-forest)] gv-grain sm:rounded-[36px]">
+        <DevBadge meta={devMeta("home")} />
         {/* Inner glow blobs */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px] sm:rounded-[36px]">
           <div className="gv-anim-blob absolute -right-20 top-10 h-72 w-72 rounded-full bg-[var(--gv-leaf)]/20 blur-3xl" />

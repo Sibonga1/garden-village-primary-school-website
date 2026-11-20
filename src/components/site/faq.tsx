@@ -1,3 +1,16 @@
+/**
+ * faq.tsx  ──  <Faq id="faq">
+ * ------------------------------------------------------------------
+ * Expandable FAQ accordion (5 items). First item open by default.
+ *
+ * Animations:
+ *  • Motion AnimatePresence — height:auto accordion expand/collapse.
+ *  • Plus icon rotates to ✕ when open.
+ *  • Reveal stagger on entrance.
+ *
+ * Connects to: anchor target of More Links → Fees & Bursaries.
+ * Data: faqs array (lib/site-data.ts).
+ * ------------------------------------------------------------------ */
 "use client";
 
 import { useState } from "react";
@@ -5,12 +18,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { faqs } from "@/lib/site-data";
 import { Reveal } from "./reveal";
+import { DevBadge } from "./dev-badge";
+import { devMeta } from "@/lib/dev-registry";
 
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section id="faq" className="relative gv-bg-mint py-20 sm:py-28">
+      <DevBadge meta={devMeta("faq")} />
       <div className="mx-auto max-w-4xl px-5 sm:px-10">
         <Reveal direction="up" className="mb-12 text-center">
           <div className="mx-auto flex w-fit items-center gap-3">

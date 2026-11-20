@@ -1,3 +1,15 @@
+/**
+ * footer.tsx  ──  <Footer>  (sticky to bottom of viewport)
+ * ------------------------------------------------------------------
+ * Brand + motto · 3 link columns (School / Admissions / Community) ·
+ * scrolling motto marquee · contact line · bottom legal.
+ *
+ * NOTE: Sticks to bottom because page.tsx uses a flex-col wrapper with
+ * flex-1 main; footer sits after main and is pushed down naturally.
+ *
+ * Animations: Motion marquee (gv-anim-marquee) + social hover lift.
+ * Data: footerLinks, contactInfo (lib/site-data.ts) · Crest.
+ * ------------------------------------------------------------------ */
 "use client";
 
 import Link from "next/link";
