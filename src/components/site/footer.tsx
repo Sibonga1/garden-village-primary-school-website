@@ -1,22 +1,19 @@
+"use client";
+
 /**
  * footer.tsx  ──  <Footer>  (sticky to bottom of viewport)
  * ------------------------------------------------------------------
  * Brand + motto · 3 link columns (School / Admissions / Community) ·
  * scrolling motto marquee · contact line · bottom legal.
  *
- * NOTE: Sticks to bottom because page.tsx uses a flex-col wrapper with
- * flex-1 main; footer sits after main and is pushed down naturally.
- *
- * Animations: Motion marquee (gv-anim-marquee) + social hover lift.
- * Data: footerLinks, contactInfo (lib/site-data.ts) · Crest.
+ * All links now navigate via the page-store (client-side pages).
  * ------------------------------------------------------------------ */
-"use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Facebook, Instagram, Youtube, Twitter, Sprout, ArrowUpRight } from "lucide-react";
 import { Crest } from "./crest";
-import { footerLinks, contactInfo } from "@/lib/site-data";
+import { contactInfo } from "@/lib/site-data";
+import { usePage, type PageKey } from "@/lib/page-store";
 
 const socials = [
   { Icon: Facebook, label: "Facebook" },
@@ -25,20 +22,53 @@ const socials = [
   { Icon: Twitter, label: "X" },
 ];
 
+const footerColumns: { title: string; links: { label: string; page: PageKey }[] }[] = [
+  {
+    title: "School",
+    links: [
+      { label: "About Us", page: "about" },
+      { label: "Our Staff", page: "staff" },
+      { label: "Programs", page: "programs" },
+      { label: "Events", page: "events" },
+    ],
+  },
+  {
+    title: "Admissions",
+    links: [
+      { label: "Enrolment", page: "contact" },
+      { label: "Fees & Bursaries", page: "faq" },
+      { label: "Open Days", page: "events" },
+      { label: "Code of Conduct", page: "conduct" },
+    ],
+  },
+  {
+    title: "Community",
+    links: [
+      { label: "Fundraising", page: "fundraising" },
+      { label: "Careers", page: "careers" },
+      { label: "Newsletter", page: "contact" },
+      { label: "Contact", page: "contact" },
+    ],
+  },
+];
+
 export function Footer() {
+  const navigate = usePage((s) => s.navigate);
+
   return (
     <footer className="relative overflow-hidden bg-[var(--gv-forest-3)] pt-16 text-[var(--gv-mint)]">
-      {/* top accent */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--gv-lime)]/40 to-transparent" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-10">
-        {/* top: brand + marquee motto */}
+        {/* top: brand + link columns */}
         <div className="flex flex-col gap-10 border-b border-white/10 pb-12 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-sm">
             <div className="flex items-center gap-3">
-              <span className="h-12 w-12 overflow-hidden rounded-full ring-2 ring-[var(--gv-leaf)]/40">
-                <Crest className="h-full w-full" />
-              </span>
+              <button type="button" onClick={() => navigate("home")} aria-label="Home">
+                <span className="block h-12 w-12 overflow-hidden rounded-full ring-2 ring-[var(--gv-leaf)]/40">
+                  <Crest className="h-full w-full" />
+                </span>
+              </button>
               <div>
                 <div className="font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-white">
                   Garden Village
@@ -49,42 +79,44 @@ export function Footer() {
               </div>
             </div>
             <p className="mt-5 font-[family-name:var(--font-playfair)] text-sm italic leading-relaxed text-[var(--gv-mint)]/70">
-              “We don&apos;t just teach children — we help shape tomorrow&apos;s
-              leaders.”
+              &ldquo;We don&apos;t just teach children — we help shape tomorrow&apos;s
+              leaders.&rdquo;
             </p>
             <div className="mt-5 flex gap-2.5">
               {socials.map(({ Icon, label }) => (
-                <motion.a
+                <motion.button
                   key={label}
-                  href="#contact"
+                  type="button"
+                  onClick={() => navigate("contact")}
                   aria-label={label}
                   whileHover={{ y: -3, scale: 1.1 }}
                   whileTap={{ scale: 0.92 }}
                   className="grid h-10 w-10 place-items-center rounded-full bg-white/8 text-white transition-colors hover:bg-[var(--gv-lime)] hover:text-[var(--gv-forest)]"
                 >
                   <Icon className="h-[18px] w-[18px]" />
-                </motion.a>
+                </motion.button>
               ))}
             </div>
           </div>
 
           {/* link columns */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            {Object.entries(footerLinks).map(([title, links]) => (
-              <div key={title}>
+            {footerColumns.map((col) => (
+              <div key={col.title}>
                 <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--gv-lime)]">
-                  {title}
+                  {col.title}
                 </h4>
                 <ul className="mt-4 space-y-3">
-                  {links.map((l) => (
+                  {col.links.map((l) => (
                     <li key={l.label}>
-                      <Link
-                        href={l.href}
+                      <button
+                        type="button"
+                        onClick={() => navigate(l.page)}
                         className="group inline-flex items-center gap-1 text-sm text-[var(--gv-mint)]/75 transition-colors hover:text-white"
                       >
                         <span>{l.label}</span>
                         <ArrowUpRight className="h-3 w-3 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
-                      </Link>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -133,9 +165,9 @@ export function Footer() {
             rights reserved.
           </span>
           <span className="flex items-center gap-4">
-            <a href="#about" className="hover:text-white">Privacy</a>
-            <a href="#about" className="hover:text-white">Terms</a>
-            <a href="#about" className="hover:text-white">Sitemap</a>
+            <button type="button" onClick={() => navigate("conduct")} className="hover:text-white">Privacy</button>
+            <button type="button" onClick={() => navigate("conduct")} className="hover:text-white">Terms</button>
+            <button type="button" onClick={() => navigate("about")} className="hover:text-white">Sitemap</button>
           </span>
         </div>
       </div>

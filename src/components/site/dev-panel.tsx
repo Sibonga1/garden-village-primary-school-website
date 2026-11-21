@@ -34,16 +34,19 @@ import {
   Component,
   Keyboard,
   File,
+  LayoutGrid,
 } from "lucide-react";
 import { useDevMode } from "./dev-context";
-import { devSections, devPersistent, devPrimitives } from "@/lib/dev-registry";
+import { devSections, devPersistent, devPrimitives, devPages } from "@/lib/dev-registry";
+import { usePage } from "@/lib/page-store";
 
-type Tab = "sections" | "shared" | "help";
+type Tab = "pages" | "sections" | "shared" | "help";
 
 export function DevPanel() {
   const { enabled, toggle } = useDevMode();
   const [mapOpen, setMapOpen] = useState(false);
-  const [tab, setTab] = useState<Tab>("sections");
+  const [tab, setTab] = useState<Tab>("pages");
+  const currentPage = usePage((s) => s.page);
 
   return (
     <>
@@ -104,13 +107,14 @@ export function DevPanel() {
             {/* Status line */}
             <div className="flex items-center gap-2 bg-[var(--gv-lime)]/10 px-5 py-2 font-mono text-[10px] text-[var(--gv-lime)]">
               <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--gv-lime)]" />
-              Developer overlay ACTIVE · labels pinned to every section
+              Active page: <span className="font-bold">#{currentPage}</span> · labels on sections
             </div>
 
             {/* Tabs */}
             <div className="flex gap-1 border-b border-white/10 px-3 py-2">
               {(
                 [
+                  { k: "pages", l: "Pages", Icon: LayoutGrid },
                   { k: "sections", l: "Sections", Icon: Layers },
                   { k: "shared", l: "Shared", Icon: Component },
                   { k: "help", l: "Help", Icon: Keyboard },
@@ -134,6 +138,57 @@ export function DevPanel() {
 
             {/* Body */}
             <div className="flex-1 overflow-y-auto px-4 py-4">
+              {tab === "pages" && (
+                <div className="space-y-3">
+                  <p className="px-1 font-mono text-[10px] text-[var(--gv-mint)]/55">
+                    The site is a client-side multi-page SPA. One route (<code className="text-[var(--gv-lime)]">/</code>)
+                    swaps between {devPages.length} page views via <code className="text-[var(--gv-lime)]">PageRouter</code>.
+                    URLs mirror to <code className="text-[var(--gv-lime)]">#/page</code>.
+                  </p>
+
+                  {/* Router entry node */}
+                  <FlowNode
+                    title="PageRouter"
+                    subtitle="components/site/page-router.tsx · reads usePage(page)"
+                    accent="var(--gv-lime)"
+                    icon={<LayoutGrid className="h-4 w-4" />}
+                  >
+                    Renders the active page view inside AnimatePresence.
+                    Scroll-to-top + hashchange listener live here.
+                  </FlowNode>
+
+                  <Connector label="switches to one of" />
+
+                  {devPages.map((p) => {
+                    const active = currentPage === p.key;
+                    return (
+                      <FlowNode
+                        key={p.key}
+                        title={p.key}
+                        subtitle={p.file}
+                        accent={active ? "var(--gv-lime)" : "var(--gv-leaf)"}
+                        icon={<Hash className="h-3.5 w-3.5" />}
+                        anchor={undefined}
+                      >
+                        <Meta icon={<Link2 className="h-3 w-3" />} label="NAV">
+                          <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] uppercase tracking-wider">
+                            {p.nav}
+                          </span>
+                          {active && (
+                            <span className="ml-2 rounded bg-[var(--gv-lime)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--gv-forest)]">
+                              current
+                            </span>
+                          )}
+                        </Meta>
+                        <Meta icon={<Layers className="h-3 w-3" />} label="SECTIONS">
+                          {p.sections}
+                        </Meta>
+                      </FlowNode>
+                    );
+                  })}
+                </div>
+              )}
+
               {tab === "sections" && (
                 <div className="space-y-3">
                   {/* Page entry node */}

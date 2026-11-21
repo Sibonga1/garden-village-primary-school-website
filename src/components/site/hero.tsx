@@ -22,7 +22,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -30,6 +29,7 @@ import { ArrowDown, Sparkles } from "lucide-react";
 import { GvButton } from "./gv-button";
 import { DevBadge } from "./dev-badge";
 import { devMeta } from "@/lib/dev-registry";
+import { usePage } from "@/lib/page-store";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -47,6 +47,7 @@ const headlineLines = [
 ];
 
 export function Hero() {
+  const navigate = usePage((s) => s.navigate);
   const heroRef = useRef<HTMLDivElement>(null);
   const treeRef = useRef<HTMLImageElement>(null);
   const classroomRef = useRef<HTMLDivElement>(null);
@@ -170,11 +171,12 @@ export function Hero() {
             </div>
 
             <div className="gv-hero-fade mt-9 flex flex-wrap items-center gap-4">
-              <GvButton href="#about" variant="lime">
+              <GvButton onClick={() => navigate("about")} variant="lime">
                 Learn More
               </GvButton>
-              <Link
-                href="#contact"
+              <button
+                type="button"
+                onClick={() => navigate("contact")}
                 className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--gv-mint)]"
               >
                 <span className="relative">
@@ -184,7 +186,7 @@ export function Hero() {
                 <span className="grid h-9 w-9 place-items-center rounded-full border border-white/20 transition-colors group-hover:border-[var(--gv-lime)]">
                   <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
                 </span>
-              </Link>
+              </button>
             </div>
 
             {/* Mini stat row */}

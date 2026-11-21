@@ -1,39 +1,24 @@
 import { Navbar } from "@/components/site/navbar";
-import { Hero } from "@/components/site/hero";
-import { About } from "@/components/site/about";
-import { Stats } from "@/components/site/stats";
-import { Programs } from "@/components/site/programs";
-import { Fundraising } from "@/components/site/fundraising";
-import { Staff } from "@/components/site/staff";
-import { Testimonials } from "@/components/site/testimonials";
-import { Faq } from "@/components/site/faq";
-import { Newsletter } from "@/components/site/newsletter";
 import { Footer } from "@/components/site/footer";
 import { BackToTop } from "@/components/site/back-to-top";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { DevModeProvider } from "@/components/site/dev-context";
 import { DevPanel } from "@/components/site/dev-panel";
+import { PageRouter } from "@/components/site/page-router";
 
 /**
- * Page composition (the ONLY user-visible route — /).
+ * Root page (the ONLY user-visible route — /).
  *
- *  DevModeProvider  ──►  wraps everything so the Developer Overlay
- *                       (labels + architecture map) can be toggled anywhere.
+ *  The site is a client-side multi-page SPA:
+ *   • usePage store (lib/page-store.ts) holds the active PageKey.
+ *   • <PageRouter/> swaps the active page view with an animated transition.
+ *   • URLs mirror the active page to `#/page` so back/forward + refresh work.
  *
- *  Order of sections (top → bottom), each is id-anchored:
- *    Navbar (fixed)          → components/site/navbar.tsx
- *    #home    Hero           → hero.tsx
- *    #about   About          → about.tsx
- *    Stats    (no anchor)    → stats.tsx
- *    #programs Programs      → programs.tsx
- *    #fundraising Fundraising→ fundraising.tsx
- *    #staff   Staff          → staff.tsx
- *    #events  Testimonials   → testimonials.tsx
- *    #faq     FAQ            → faq.tsx
- *    #contact Newsletter     → newsletter.tsx
- *    Footer (sticky bottom)  → footer.tsx
+ *  Pages available: home · about · programs · staff · fundraising ·
+ *                   events · faq · contact · sports · conduct · careers
  *
- *  Floating overlays: ScrollProgress (top), BackToTop (br), DevPanel (bl).
+ *  See src/components/pages/* for each page view and src/lib/page-store.ts
+ *  for the page metadata + navigation API.
  */
 export default function Home() {
   return (
@@ -42,15 +27,7 @@ export default function Home() {
         <ScrollProgress />
         <Navbar />
         <main className="flex-1">
-          <Hero />
-          <About />
-          <Stats />
-          <Programs />
-          <Fundraising />
-          <Staff />
-          <Testimonials />
-          <Faq />
-          <Newsletter />
+          <PageRouter />
         </main>
         <Footer />
         <BackToTop />

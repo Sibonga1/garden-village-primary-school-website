@@ -1,29 +1,32 @@
+"use client";
+
 /**
  * navbar.tsx  ──  <Navbar>  (fixed, top, full-width)
  * ------------------------------------------------------------------
- * Floating glassmorphism pill navbar. Left: crest + "Garden Village /
- * SCHOOL · SOUTH AFRICA". Center: Home / About / Staff / More Links ▾.
- * Right: "Enrol Now" pill. Mobile: hamburger → slide-in sheet.
+ * Floating glassmorphism pill navbar, now PAGE-AWARE.
  *
- * "More Links" opens a large glassmorphism dropdown panel:
- *   LEFT column:  Sports · Code of Conduct · Contact
- *   RIGHT column: Careers · Fundraising · Events
- *   + 4 social icons (Facebook/Instagram/YouTube/X).
+ *  • Primary links:  Home · About · Staff   (usePage store, navigate())
+ *  • "More Links" dropdown:  Sports · Code of Conduct · Contact  |  Careers · Fundraising · Events
+ *  • "Enrol Now" pill  → contact page
+ *  • Mobile: hamburger → slide-in sheet listing ALL pages
+ *  • Active page is highlighted with a lime underline/dot.
  *
- * State: `scrolled` (useScroll > 30px → tighter glass) · `moreOpen`
- * (click toggle, closes on outside-click / Escape) · `mobileOpen`.
- *
- * Connects to: #home, #about, #staff, #contact + the 6 More Links anchors.
- * Data: primaryNav, moreLinksLeft, moreLinksRight (lib/site-data.ts).
+ * State: `scrolled` (useScroll > 30px) · `moreOpen` · `mobileOpen`.
+ * Data: primaryNavKeys, moreLinksLeftKeys, moreLinksRightKeys, pages (lib/page-store.ts).
  * ------------------------------------------------------------------ */
-"use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { ChevronDown, Menu, X, Facebook, Instagram, Youtube, Twitter } from "lucide-react";
 import { Crest } from "./crest";
-import { primaryNav, moreLinksLeft, moreLinksRight } from "@/lib/site-data";
+import {
+  usePage,
+  pages,
+  primaryNavKeys,
+  moreLinksLeftKeys,
+  moreLinksRightKeys,
+  type PageKey,
+} from "@/lib/page-store";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -31,6 +34,9 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+
+  const current = usePage((s) => s.page);
+  const navigate = usePage((s) => s.navigate);
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 30));
 
@@ -51,6 +57,34 @@ export function Navbar() {
     };
   }, [moreOpen]);
 
+  const go = (key: PageKey) => {
+    navigate(key);
+    setMoreOpen(false);
+    setMobileOpen(false);
+  };
+
+  const renderNavLink = (key: PageKey) => {
+    const active = current === key;
+    return (
+      <button
+        key={key}
+        type="button"
+        onClick={() => go(key)}
+        className="group relative font-[family-name:var(--font-jakarta)] text-[15px] font-medium text-[var(--gv-ink)]"
+      >
+        {pages[key].label}
+        <span
+          className={`absolute -bottom-1.5 left-0 h-[2px] w-full origin-left bg-[var(--gv-forest)] transition-transform duration-300 ${
+            active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+          }`}
+        />
+        {active && (
+          <span className="absolute -top-2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-[var(--gv-lime)]" />
+        )}
+      </button>
+    );
+  };
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <motion.nav
@@ -69,7 +103,7 @@ export function Navbar() {
         style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
       >
         {/* Logo */}
-        <Link href="#home" className="group flex items-center gap-3">
+        <button type="button" onClick={() => go("home")} className="group flex items-center gap-3">
           <motion.div
             whileHover={{ rotate: -8, scale: 1.06 }}
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -85,20 +119,11 @@ export function Navbar() {
               School · South Africa
             </span>
           </span>
-        </Link>
+        </button>
 
         {/* Center links (desktop) */}
         <div className="hidden items-center gap-9 md:flex">
-          {primaryNav.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="group relative font-[family-name:var(--font-jakarta)] text-[15px] font-medium text-[var(--gv-ink)]"
-            >
-              {link.label}
-              <span className="absolute -bottom-1.5 left-0 h-[2px] w-full origin-left scale-x-0 bg-[var(--gv-forest)] transition-transform duration-300 group-hover:scale-x-100" />
-            </Link>
-          ))}
+          {primaryNavKeys.map(renderNavLink)}
 
           {/* More links trigger */}
           <button
@@ -118,12 +143,13 @@ export function Navbar() {
 
         {/* CTA (desktop) + mobile menu button */}
         <div className="flex items-center gap-3">
-          <Link
-            href="#contact"
+          <button
+            type="button"
+            onClick={() => go("contact")}
             className="hidden rounded-full bg-[var(--gv-forest)] px-5 py-2.5 font-[family-name:var(--font-jakarta)] text-sm font-semibold text-[var(--gv-lime)] transition-all duration-300 hover:bg-[var(--gv-mid-green)] hover:shadow-[0_10px_30px_-10px_rgba(14,42,31,0.6)] md:inline-block"
           >
             Enrol Now
-          </Link>
+          </button>
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
@@ -145,7 +171,6 @@ export function Navbar() {
               transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
               className="gv-glass absolute right-2 top-[calc(100%+10px)] w-[min(640px,92vw)] overflow-hidden rounded-[26px] p-7 shadow-[0_40px_80px_-30px_rgba(14,42,31,0.5)]"
             >
-              {/* Decorative blob */}
               <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[var(--gv-lime)]/30 blur-3xl" />
               <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-[var(--gv-leaf)]/20 blur-3xl" />
 
@@ -159,22 +184,22 @@ export function Navbar() {
               </div>
 
               <div className="relative mt-7 grid grid-cols-2 gap-x-8 gap-y-6 sm:gap-y-7">
-                {[moreLinksLeft, moreLinksRight].map((col, ci) => (
+                {[moreLinksLeftKeys, moreLinksRightKeys].map((col, ci) => (
                   <div key={ci} className="flex flex-col gap-6 sm:gap-7">
-                    {col.map((link, i) => (
+                    {col.map((key, i) => (
                       <motion.div
-                        key={link.label}
+                        key={key}
                         initial={{ opacity: 0, x: 16 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.06 * (ci * 3 + i) + 0.1 }}
                       >
-                        <Link
-                          href={link.href}
-                          onClick={() => setMoreOpen(false)}
+                        <button
+                          type="button"
+                          onClick={() => go(key)}
                           className="gv-underline-link font-[family-name:var(--font-jakarta)] text-lg font-semibold text-[var(--gv-ink)] sm:text-xl"
                         >
-                          {link.label}
-                        </Link>
+                          {pages[key].label}
+                        </button>
                       </motion.div>
                     ))}
                   </div>
@@ -189,16 +214,17 @@ export function Navbar() {
                     { Icon: Youtube, label: "YouTube" },
                     { Icon: Twitter, label: "X" },
                   ].map(({ Icon, label }) => (
-                    <motion.a
+                    <motion.button
                       key={label}
-                      href="#contact"
+                      type="button"
+                      onClick={() => go("contact")}
                       aria-label={label}
                       whileHover={{ y: -3, scale: 1.08 }}
                       whileTap={{ scale: 0.92 }}
                       className="grid h-11 w-11 place-items-center rounded-full bg-[var(--gv-forest)] text-white transition-colors hover:bg-[var(--gv-mid-green)]"
                     >
                       <Icon className="h-[18px] w-[18px]" />
-                    </motion.a>
+                    </motion.button>
                   ))}
                 </div>
                 <span className="hidden text-right text-xs text-[var(--gv-ink-soft)] sm:block">
@@ -231,7 +257,7 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 280, damping: 30 }}
-              className="absolute right-0 top-0 h-full w-[82%] max-w-sm bg-[var(--gv-mint)] p-6 shadow-2xl"
+              className="absolute right-0 top-0 h-full w-[82%] max-w-sm overflow-y-auto bg-[var(--gv-mint)] p-6 shadow-2xl"
             >
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-2">
@@ -253,31 +279,35 @@ export function Navbar() {
               </div>
 
               <nav className="mt-8 flex flex-col gap-1">
-                {[...primaryNav, ...moreLinksLeft, ...moreLinksRight].map((link, i) => (
+                {(Object.keys(pages) as PageKey[]).map((key, i) => (
                   <motion.div
-                    key={link.label}
+                    key={key}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 * i }}
+                    transition={{ delay: 0.04 * i }}
                   >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block rounded-2xl px-4 py-3 font-[family-name:var(--font-jakarta)] text-lg font-semibold text-[var(--gv-ink)] transition-colors hover:bg-[var(--gv-sage)]"
+                    <button
+                      type="button"
+                      onClick={() => go(key)}
+                      className={`block w-full rounded-2xl px-4 py-3 text-left font-[family-name:var(--font-jakarta)] text-lg font-semibold transition-colors ${
+                        current === key
+                          ? "bg-[var(--gv-forest)] text-[var(--gv-lime)]"
+                          : "text-[var(--gv-ink)] hover:bg-[var(--gv-sage)]"
+                      }`}
                     >
-                      {link.label}
-                    </Link>
+                      {pages[key].label}
+                    </button>
                   </motion.div>
                 ))}
               </nav>
 
-              <Link
-                href="#contact"
-                onClick={() => setMobileOpen(false)}
-                className="mt-6 block rounded-full bg-[var(--gv-forest)] px-5 py-3 text-center font-[family-name:var(--font-jakarta)] text-sm font-semibold text-[var(--gv-lime)]"
+              <button
+                type="button"
+                onClick={() => go("contact")}
+                className="mt-6 block w-full rounded-full bg-[var(--gv-forest)] px-5 py-3 text-center font-[family-name:var(--font-jakarta)] text-sm font-semibold text-[var(--gv-lime)]"
               >
                 Enrol Now
-              </Link>
+              </button>
             </motion.div>
           </motion.div>
         )}

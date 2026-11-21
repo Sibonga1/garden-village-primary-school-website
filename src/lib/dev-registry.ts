@@ -173,11 +173,41 @@ export const devPersistent = [
 /** Shared primitives reused across sections (shown in the map's "Shared" tab). */
 export const devPrimitives = [
   { name: "Reveal / RevealGroup / RevealItem", file: "components/site/reveal.tsx", used: "Hero, About, Stats, Programs, Fundraising, Staff, FAQ, Newsletter", note: "Motion-based scroll-reveal wrappers (direction, stagger, blur)" },
-  { name: "GvButton", file: "components/site/gv-button.tsx", used: "Hero, Fundraising", note: "Signature pill button with circular arrow badge" },
+  { name: "GvButton", file: "components/site/gv-button.tsx", used: "Hero, Fundraising, pages (CTAs)", note: "Signature pill button with circular arrow badge" },
   { name: "Crest", file: "components/site/crest.tsx", used: "Navbar, About, Fundraising, Footer", note: "Inline SVG school crest" },
-  { name: "CountUp", file: "components/site/count-up.tsx", used: "Stats", note: "MotionValue-driven number counter on in-view" },
+  { name: "CountUp", file: "components/site/count-up.tsx", used: "Stats, Home page", note: "MotionValue-driven number counter on in-view" },
   { name: "ScrollProgress", file: "components/site/scroll-progress.tsx", used: "Top of page", note: "Top gradient bar tied to scrollYProgress" },
   { name: "BackToTop", file: "components/site/back-to-top.tsx", used: "Floating, bottom-right", note: "Appears after 600px scroll" },
+  { name: "PageRouter", file: "components/site/page-router.tsx", used: "page.tsx → main", note: "Client-side page switcher (AnimatePresence + hash sync + scroll-to-top)" },
+  { name: "page-store", file: "lib/page-store.ts", used: "Navbar, Footer, pages, router", note: "Zustand store: active PageKey + navigate() · syncs to #/page hash" },
+  { name: "page-kit", file: "components/site/page-kit.tsx", used: "all page views", note: "PageShell, PageHero, PageSection, PageCTA, SectionHeading, PageTransition" },
+];
+
+/**
+ * Page-level registry (the multi-page SPA).
+ * Each entry describes a PAGE view: which file renders it, which nav bucket
+ * exposes it (primary / more-left / more-right / none), and which sections it
+ * reuses. Shown in the dev panel's "Pages" tab.
+ */
+export type DevPageMeta = {
+  key: string;
+  file: string;
+  nav: "primary" | "more-left" | "more-right" | "footer" | "—";
+  sections: string; // which site sections it reuses + extras
+};
+
+export const devPages: DevPageMeta[] = [
+  { key: "home", file: "components/pages/home-page.tsx", nav: "primary", sections: "Hero · Stats · Programs(preview) · Fundraising(teaser) · Testimonials · CTA" },
+  { key: "about", file: "components/pages/about-page.tsx", nav: "primary", sections: "About · Stats · Values · Timeline · CTA" },
+  { key: "staff", file: "components/pages/staff-page.tsx", nav: "primary", sections: "Staff · Philosophy · Join-our-team · CTA" },
+  { key: "programs", file: "components/pages/programs-page.tsx", nav: "more-right", sections: "Programs · Approach · Timetable · CTA" },
+  { key: "fundraising", file: "components/pages/fundraising-page.tsx", nav: "more-right", sections: "Fundraising · Donor tiers · Spend breakdown · CTA" },
+  { key: "events", file: "components/pages/events-page.tsx", nav: "more-right", sections: "Testimonials · Upcoming events · CTA" },
+  { key: "sports", file: "components/pages/sports-page.tsx", nav: "more-left", sections: "PageHero · Sports grid · Fixtures · CTA" },
+  { key: "conduct", file: "components/pages/conduct-page.tsx", nav: "more-left", sections: "PageHero · Six Be's · Expectations · CTA" },
+  { key: "contact", file: "components/pages/contact-page.tsx", nav: "more-left", sections: "Newsletter · Ways to reach · CTA" },
+  { key: "faq", file: "components/pages/faq-page.tsx", nav: "footer", sections: "Faq · Quick links · CTA" },
+  { key: "careers", file: "components/pages/careers-page.tsx", nav: "more-left", sections: "PageHero · Open positions · Culture · CTA" },
 ];
 
 /**

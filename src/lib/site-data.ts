@@ -213,3 +213,93 @@ export const contactInfo = {
   email: "hello@gardenvillage.school",
   hours: "Mon–Fri, 07:30 – 16:30",
 };
+
+/* ====================================================================== */
+/*  Page-specific content (used by the multi-page views)                   */
+/* ====================================================================== */
+
+export type Value = { title: string; description: string; icon: string };
+
+export const values: Value[] = [
+  {
+    title: "Curiosity",
+    description: "We ask, we wonder, we explore. Questions are the seeds of learning.",
+    icon: "Sparkles",
+  },
+  {
+    title: "Kindness",
+    description: "We treat each other with respect and compassion, every single day.",
+    icon: "Heart",
+  },
+  {
+    title: "Responsibility",
+    description: "We own our choices and care for our community and our planet.",
+    icon: "Sprout",
+  },
+  {
+    title: "Community",
+    description: "We grow together — learners, families and teachers as one village.",
+    icon: "Users",
+  },
+];
+
+export type TimelineItem = { year: string; title: string; text: string };
+
+export const timeline: TimelineItem[] = [
+  { year: "2007", title: "Founded", text: "Garden Village opens its doors with 40 learners and 3 teachers." },
+  { year: "2012", title: "New Wing", text: "We expand with a dedicated arts studio and library." },
+  { year: "2017", title: "Green Gardeners", text: "Our flagship eco-club launches, now 120+ young gardeners strong." },
+  { year: "2021", title: "Code & Robotics", text: "Future-ready skills lab opens with robotics kits and tablets." },
+  { year: "2024", title: "Eco-Lab Campaign", text: "We begin fundraising for a solar-powered library & science garden." },
+];
+
+export type DonorTier = { name: string; amount: string; perk: string; accent: string };
+
+export const donorTiers: DonorTier[] = [
+  { name: "Seed", amount: "R100", perk: "A learner's stationery pack for a term", accent: "#c8e86a" },
+  { name: "Sapling", amount: "R500", perk: "A month of aftercare for one learner", accent: "#2e9e3e" },
+  { name: "Tree", amount: "R2,000", perk: "A robotics kit for the Code Lab", accent: "#f5c518" },
+  { name: "Grove", amount: "R10,000", perk: "A named reading nook in the new library", accent: "#d42b1e" },
+];
+
+export type SchoolEvent = { date: string; month: string; title: string; time: string; place: string };
+
+export const events: SchoolEvent[] = [
+  { date: "14", month: "MAR", title: "Open Day & Campus Tour", time: "09:00 – 12:00", place: "Main Hall" },
+  { date: "22", month: "APR", title: "Inter-house Athletics Day", time: "08:30 – 14:00", place: "Sports Field" },
+  { date: "09", month: "MAY", title: "Heritage Assembly", time: "10:00 – 11:30", place: "Amphitheatre" },
+  { date: "03", month: "JUN", title: "Green Gardeners Market", time: "09:00 – 13:00", place: "Eco-Garden" },
+  { date: "28", month: "NOV", title: "Year-end Concert", time: "18:00 – 20:30", place: "Main Hall" },
+];
+
+export type Sport = { name: string; teams: string; season: string; icon: string };
+
+export const sports: Sport[] = [
+  { name: "Soccer", teams: "U9 · U11 · U13", season: "Terms 2 & 3", icon: "Volleyball" },
+  { name: "Netball", teams: "U9 · U11 · U13", season: "Terms 2 & 3", icon: "Target" },
+  { name: "Athletics", teams: "All ages", season: "Term 1", icon: "Zap" },
+  { name: "Swimming", teams: "U8+", season: "Term 1 & 4", icon: "Waves" },
+  { name: "Cricket", teams: "U11 · U13", season: "Term 1 & 4", icon: "Trophy" },
+  { name: "Chess", teams: "All ages", season: "Year-round", icon: "Crown" },
+];
+
+export type ConductRule = { title: string; text: string };
+
+export const conductRules: ConductRule[] = [
+  { title: "Be Safe", text: "Move calmly, use equipment wisely, and look after yourself and others." },
+  { title: "Be Kind", text: "Use respectful words, include everyone, and help a friend in need." },
+  { title: "Be Ready to Learn", text: "Arrive on time, bring your tools, and give your best effort." },
+  { title: "Be Responsible", text: "Own your choices, care for our school, and tell the truth." },
+  { title: "Be Curious", text: "Ask questions, explore bravely, and celebrate mistakes as learning." },
+  { title: "Be Green", text: "Protect nature, reduce waste, and tend our gardens with care." },
+];
+
+export type JobOpening = { title: string; type: string; location: string; grade: string };
+
+export const jobOpenings: JobOpening[] = [
+  { title: "Foundation Phase Teacher", type: "Full-time · Permanent", location: "On-site, Garden Village", grade: "Grade 1" },
+  { title: "Mathematics & Science Teacher", type: "Full-time · Permanent", location: "On-site, Garden Village", grade: "Grade 6–7" },
+  { title: "Sports & Wellness Coach", type: "Part-time · Contract", location: "On-site, Garden Village", grade: "All phases" },
+  { title: "Aftercare Coordinator", type: "Full-time · Permanent", location: "On-site, Garden Village", grade: "Grade R–7" },
+  { title: "Library & Literacy Assistant", type: "Part-time · Term-based", location: "On-site, Garden Village", grade: "All phases" },
+];
